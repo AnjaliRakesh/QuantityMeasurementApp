@@ -2,13 +2,16 @@ public class QuantityMeasurementApp {
 
     public static void main(String[] args) {
 
-        Quantity oneFoot = new Quantity(1.0, Quantity.Unit.FEET);
-        Quantity twelveInches = new Quantity(12.0, Quantity.Unit.INCHES);
-        Quantity twoFeet = new Quantity(2.0, Quantity.Unit.FEET);
-        Quantity twentyFourInches = new Quantity(24.0, Quantity.Unit.INCHES);
+        Quantity oneYard = new Quantity(1.0, Quantity.Unit.YARDS);
+        Quantity threeFeet = new Quantity(3.0, Quantity.Unit.FEET);
+        Quantity thirtySixInches = new Quantity(36.0, Quantity.Unit.INCHES);
 
-        System.out.println(oneFoot.equals(twelveInches));      // true
-        System.out.println(twoFeet.equals(twentyFourInches));  // true
-        System.out.println(oneFoot.equals(twoFeet));           // false
+        Quantity oneCm = new Quantity(1.0, Quantity.Unit.CENTIMETERS);
+        Quantity pointThreeNineThree = new Quantity(0.393701, Quantity.Unit.INCHES);
+
+        System.out.println(oneYard.equals(threeFeet));          // true
+        System.out.println(oneYard.equals(thirtySixInches));    // true
+        System.out.println(oneCm.equals(pointThreeNineThree));  // true
+        System.out.println(oneCm.equals(threeFeet));            // false
     }
 }
