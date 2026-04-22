@@ -1,7 +1,10 @@
 public class Quantity {
 
     public enum Unit {
-        FEET, INCHES
+        FEET,
+        INCHES,
+        YARDS,
+        CENTIMETERS
     }
 
     private final double value;
@@ -12,12 +15,20 @@ public class Quantity {
         this.unit = unit;
     }
 
-    private double toFeet() {
+    private double toInches() {
         switch (unit) {
             case FEET:
-                return value;
+                return value * 12.0;
+
             case INCHES:
-                return value / 12.0;
+                return value;
+
+            case YARDS:
+                return value * 36.0;
+
+            case CENTIMETERS:
+                return value * 0.393701;
+
             default:
                 throw new IllegalArgumentException("Invalid Unit");
         }
@@ -33,6 +44,6 @@ public class Quantity {
 
         Quantity other = (Quantity) obj;
 
-        return Double.compare(this.toFeet(), other.toFeet()) == 0;
+        return Double.compare(this.toInches(), other.toInches()) == 0;
     }
 }
