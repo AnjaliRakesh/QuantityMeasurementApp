@@ -2,18 +2,14 @@ public class QuantityMeasurementApp {
 
     public static void main(String[] args) {
 
-        Quantity oneFoot = new Quantity(1.0, LengthUnit.FEET);
-        Quantity twelveInches = new Quantity(12.0, LengthUnit.INCHES);
-        Quantity oneYard = new Quantity(1.0, LengthUnit.YARDS);
-        Quantity oneCm = new Quantity(2.54, LengthUnit.CENTIMETERS);
+        QuantityWeight oneKg = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
+        QuantityWeight thousandGram = new QuantityWeight(1000.0, WeightUnit.GRAM);
+        QuantityWeight onePound = new QuantityWeight(1.0, WeightUnit.POUND);
 
-        System.out.println(oneFoot.convertTo(LengthUnit.INCHES));
-        System.out.println(oneFoot.add(twelveInches, LengthUnit.FEET));
-        System.out.println(twelveInches.equals(oneYard));
-        System.out.println(oneYard.add(oneFoot, LengthUnit.YARDS));
-        System.out.println(oneCm.convertTo(LengthUnit.INCHES));
-
-        System.out.println(LengthUnit.FEET.convertToBaseUnit(12.0));
-        System.out.println(LengthUnit.INCHES.convertToBaseUnit(12.0));
+        System.out.println(oneKg.equals(thousandGram));
+        System.out.println(oneKg.convertTo(WeightUnit.GRAM));
+        System.out.println(onePound.convertTo(WeightUnit.KILOGRAM));
+        System.out.println(oneKg.add(thousandGram));
+        System.out.println(oneKg.add(thousandGram, WeightUnit.GRAM));
     }
 }
