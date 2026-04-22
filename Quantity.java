@@ -21,12 +21,34 @@ public class Quantity {
     private final Unit unit;
 
     public Quantity(double value, Unit unit) {
+        if (!Double.isFinite(value)) {
+            throw new IllegalArgumentException("Value must be finite");
+        }
+
+        if (unit == null) {
+            throw new IllegalArgumentException("Unit cannot be null");
+        }
+
         this.value = value;
         this.unit = unit;
     }
 
-    public static double convert(double value, Unit source, Unit target) {
+    public Quantity add(Quantity other) {
+        if (other == null) {
+            throw new IllegalArgumentException("Other quantity cannot be null");
+        }
 
+        double thisInInches = this.value * this.unit.getConversionFactor();
+        double otherInInches = other.value * other.unit.getConversionFactor();
+
+        double totalInInches = thisInInches + otherInInches;
+
+        double resultValue = totalInInches / this.unit.getConversionFactor();
+
+        return new Quantity(resultValue, this.unit);
+    }
+
+    public static double convert(double value, Unit source, Unit target) {
         if (!Double.isFinite(value)) {
             throw new IllegalArgumentException("Value must be finite");
         }
@@ -37,27 +59,6 @@ public class Quantity {
 
         double valueInBase = value * source.getConversionFactor();
         return valueInBase / target.getConversionFactor();
-    }
-
-    public Quantity convertTo(Unit target) {
-        double convertedValue = convert(this.value, this.unit, target);
-        return new Quantity(convertedValue, target);
-    }
-
-    private double toInches() {
-        return value * unit.getConversionFactor();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-
-        if (!(obj instanceof Quantity))
-            return false;
-
-        Quantity other = (Quantity) obj;
-        return Math.abs(this.toInches() - other.toInches()) < 0.000001;
     }
 
     @Override
