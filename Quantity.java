@@ -1,26 +1,12 @@
 public class Quantity {
 
-    public enum Unit {
-        FEET(12.0),
-        INCHES(1.0),
-        YARDS(36.0),
-        CENTIMETERS(0.393701);
-
-        private final double conversionFactor;
-
-        Unit(double conversionFactor) {
-            this.conversionFactor = conversionFactor;
-        }
-
-        public double getConversionFactor() {
-            return conversionFactor;
-        }
-    }
+    private static final double EPSILON = 0.000001;
 
     private final double value;
-    private final Unit unit;
+    private final LengthUnit unit;
 
-    public Quantity(double value, Unit unit) {
+    public Quantity(double value, LengthUnit unit) {
+
         if (!Double.isFinite(value)) {
             throw new IllegalArgumentException("Value must be finite");
         }
@@ -33,11 +19,23 @@ public class Quantity {
         this.unit = unit;
     }
 
+    public Quantity convertTo(LengthUnit targetUnit) {
+
+        if (targetUnit == null) {
+            throw new IllegalArgumentException("Target unit cannot be null");
+        }
+
+        double baseValue = unit.convertToBaseUnit(value);
+        double convertedValue = targetUnit.convertFromBaseUnit(baseValue);
+
+        return new Quantity(convertedValue, targetUnit);
+    }
+
     public Quantity add(Quantity other) {
         return add(other, this.unit);
     }
 
-    public Quantity add(Quantity other, Unit targetUnit) {
+    public Quantity add(Quantity other, LengthUnit targetUnit) {
 
         if (other == null) {
             throw new IllegalArgumentException("Other quantity cannot be null");
@@ -47,13 +45,30 @@ public class Quantity {
             throw new IllegalArgumentException("Target unit cannot be null");
         }
 
-        double thisInInches = this.value * this.unit.getConversionFactor();
-        double otherInInches = other.value * other.unit.getConversionFactor();
+        double thisBase = this.unit.convertToBaseUnit(this.value);
+        double otherBase = other.unit.convertToBaseUnit(other.value);
 
-        double totalInInches = thisInInches + otherInInches;
-        double resultValue = totalInInches / targetUnit.getConversionFactor();
+        double totalBase = thisBase + otherBase;
+        double result = targetUnit.convertFromBaseUnit(totalBase);
 
-        return new Quantity(resultValue, targetUnit);
+        return new Quantity(result, targetUnit);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if (this == obj)
+            return true;
+
+        if (!(obj instanceof Quantity))
+            return false;
+
+        Quantity other = (Quantity) obj;
+
+        double thisBase = this.unit.convertToBaseUnit(this.value);
+        double otherBase = other.unit.convertToBaseUnit(other.value);
+
+        return Math.abs(thisBase - otherBase) < EPSILON;
     }
 
     @Override
