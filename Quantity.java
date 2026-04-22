@@ -34,31 +34,26 @@ public class Quantity {
     }
 
     public Quantity add(Quantity other) {
+        return add(other, this.unit);
+    }
+
+    public Quantity add(Quantity other, Unit targetUnit) {
+
         if (other == null) {
             throw new IllegalArgumentException("Other quantity cannot be null");
+        }
+
+        if (targetUnit == null) {
+            throw new IllegalArgumentException("Target unit cannot be null");
         }
 
         double thisInInches = this.value * this.unit.getConversionFactor();
         double otherInInches = other.value * other.unit.getConversionFactor();
 
         double totalInInches = thisInInches + otherInInches;
+        double resultValue = totalInInches / targetUnit.getConversionFactor();
 
-        double resultValue = totalInInches / this.unit.getConversionFactor();
-
-        return new Quantity(resultValue, this.unit);
-    }
-
-    public static double convert(double value, Unit source, Unit target) {
-        if (!Double.isFinite(value)) {
-            throw new IllegalArgumentException("Value must be finite");
-        }
-
-        if (source == null || target == null) {
-            throw new IllegalArgumentException("Units cannot be null");
-        }
-
-        double valueInBase = value * source.getConversionFactor();
-        return valueInBase / target.getConversionFactor();
+        return new Quantity(resultValue, targetUnit);
     }
 
     @Override
